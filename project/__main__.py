@@ -15,14 +15,18 @@ def my_hook(d):
 		print 'Finished downloading'
 
 		song_name=d['filename'][:-17]
+
 		access_token=config.get('config', 'pb_access_token')
+
+		message_title=config.get('pushbullet', 'message_title')
+		message_body=config.get('pushbullet', 'message_body') % song_name
 
 		# Set up the request for the pushbullet notification
 
 		payload={
 			'type': 'note',
-			'title': 'Downloaded',
-			'body': song_name,
+			'title': message_title,
+			'body': message_body,
 		}
 		
 		headers={
