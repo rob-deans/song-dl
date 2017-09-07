@@ -43,7 +43,7 @@ def my_hook(d):
 
 def main(config):
 
-	songlink=config.get('config','link')
+	songlink=config.get('youtube-dl','playlist')
 
 	ydl_opts={
 		'format': 'bestaudio/best',
