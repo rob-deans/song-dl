@@ -12,9 +12,7 @@ config=ConfigParser.ConfigParser()
 def my_hook(d):
 
 	if d['status'] == 'finished':
-		print 'Finished downloading'
-
-		song_name=d['filename'][:-17]
+		song_name=d['filename'][15:]
 
 		access_token=config.get('pushbullet', 'access_token')
 
@@ -45,17 +43,18 @@ def main(config):
 
 	songlink=config.get('youtube-dl','playlist')
 	dl_location=config.get('config','dl_location') + '%(title)s.%(ext)s'
+	archive_location=config.get('config', 'archive_location') + '.downloaded.txt'
 
 	ydl_opts={
 		'format': 'bestaudio/best',
 		'ignoreerrors': True,
 		'continue': True,
 		'nooverwrites': True,
-		'playliststart': 2,
+		'download_archive': '../.downloaded.txt',
 		'postprocessors': [{
 			'key': 'FFmpegExtractAudio',
 			'preferredcodec': 'mp3',
-			'preferredquality': '192'
+			'preferredquality': '256'
 		}],
 		'outtmpl': dl_location,
 		'progress_hooks': [my_hook]
