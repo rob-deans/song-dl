@@ -16,7 +16,7 @@ def my_hook(d):
 
 		song_name=d['filename'][:-17]
 
-		access_token=config.get('config', 'pb_access_token')
+		access_token=config.get('pushbullet', 'access_token')
 
 		message_title=config.get('pushbullet', 'message_title')
 		message_body=config.get('pushbullet', 'message_body') % song_name
