@@ -5,7 +5,7 @@ import argparse
 import requests
 import json
 import ConfigParser
-
+import datetime
 
 config=ConfigParser.ConfigParser()
 
@@ -44,17 +44,20 @@ def my_hook(d):
 def main(config):
 
 	songlink=config.get('youtube-dl','playlist')
+	dl_location=config.get('config','dl_location') + '%(title)s.%(ext)s'
 
 	ydl_opts={
 		'format': 'bestaudio/best',
 		'ignoreerrors': True,
 		'continue': True,
 		'nooverwrites': True,
+		'playliststart': 2,
 		'postprocessors': [{
 			'key': 'FFmpegExtractAudio',
 			'preferredcodec': 'mp3',
 			'preferredquality': '192'
 		}],
+		'outtmpl': dl_location,
 		'progress_hooks': [my_hook]
 	
 	} # Pass in arguments for this
