@@ -12,7 +12,7 @@ config=ConfigParser.ConfigParser()
 def my_hook(d):
 
 	if d['status'] == 'finished':
-		song_name=d['filename'][15:]
+		song_name=d['filename'][16:]
 
 		access_token=config.get('pushbullet', 'access_token')
 
