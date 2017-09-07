@@ -4,20 +4,29 @@ import sys
 import argparse
 import requests
 import json
+import ConfigParser
+
+
+config=ConfigParser.ConfigParser()
 
 def my_hook(d):
 
 	if d['status'] == 'finished':
 		print 'Finished downloading'
+
 		song_name=d['filename'][:-17]
-		print song_name
+		access_token=config.get('config', 'pb_access_token')
+
+		# Set up the request for the pushbullet notification
+
 		payload={
+			'type': 'note',
 			'title': 'Downloaded',
 			'body': song_name,
 		}
 		
 		headers={
-			'Access-Token': '',
+			'Access-Token': access_token,
 			'Content-Type': 'application/json'
 		}
 
@@ -27,10 +36,11 @@ def my_hook(d):
 			headers=headers
 		)
 
-		print r.text
 
+def main(config):
 
-def main(args):
+	songlink=config.get('config','link')
+
 	ydl_opts={
 		'format': 'bestaudio/best',
 		'ignoreerrors': True,
@@ -45,13 +55,11 @@ def main(args):
 	
 	} # Pass in arguments for this
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-		ydl.download([args])
+		ydl.download([songlink])
 
 if __name__ == '__main__':
 	# Get all the options from the config file
-	parser=argparse.ArgumentParser()
-	parser.add_argument(
-		'yt_link', help = 'the youtube link to download'
-	)
-	args=parser.parse_args()
-	main(args.yt_link)
+
+	config.read('defaults.cfg')
+
+	main(config)
