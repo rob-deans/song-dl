@@ -1,0 +1,12 @@
+config:
+  dl_location: #Full location to where you are saving the files (must end in '/')
+  archive_location: #Full location of where the archive file is (must end in '/')
+
+pushbullet:
+  access_token: #Access token to your pushbullet account - leave blank if you do not want it enabled
+  message_title: Downloaded
+  message_body: Download %s #The message that you will see - '%s' denotes where the song name will replace 
+
+youtube-dl:
+  playlist:
+    - link: https://www.youtube.com/playlist?list=PLA0NMfzvlmgOO32w8Dl7esIASM2VYdElH #Full url for the playlist

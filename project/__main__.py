@@ -5,19 +5,21 @@ import argparse
 import requests
 import json
 import ConfigParser
+import yaml
 import datetime
 
-config=ConfigParser.ConfigParser()
+current_playlist=''
+yaml_config=[]
 
 def my_hook(d):
 
 	if d['status'] == 'finished':
 		song_name=d['filename'][16:]
 
-		access_token=config.get('pushbullet', 'access_token')
+		access_token=yaml_config['pushbullet']['access_token']
 
-		message_title=config.get('pushbullet', 'message_title')
-		message_body=config.get('pushbullet', 'message_body') % song_name
+		message_title=yaml_config['pushbullet']['message_title']
+		message_body=yaml_config['pushbullet']['message_body'] & song_name
 
 		# Set up the request for the pushbullet notification
 
@@ -41,16 +43,16 @@ def my_hook(d):
 
 def main(config):
 
-	songlink=config.get('youtube-dl','playlist')
-	dl_location=config.get('config','dl_location') + '%(title)s.%(ext)s'
-	archive_location=config.get('config', 'archive_location') + '.downloaded.txt'
+	playlists=config['youtube-dl']['playlist']
+	dl_location=config['config']['dl_location'] + '%(title)s.%(ext)s'
+	archive_location=config['config']['archive_location'] + '.downloaded.txt'
 
 	ydl_opts={
 		'format': 'bestaudio/best',
 		'ignoreerrors': True,
 		'continue': True,
 		'nooverwrites': True,
-		'download_archive': '../.downloaded.txt',
+		'download_archive': archive_location,
 		'postprocessors': [{
 			'key': 'FFmpegExtractAudio',
 			'preferredcodec': 'mp3',
@@ -60,12 +62,15 @@ def main(config):
 		'progress_hooks': [my_hook]
 	
 	} # Pass in arguments for this
-	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-		ydl.download([songlink])
+        for playlist in playlists:
+            current_playlist=playlist['name']
+	    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+	        ydl.download([playlist['link']])
 
 if __name__ == '__main__':
 	# Get all the options from the config file
 
-	config.read('defaults.cfg')
+	stream = file('/home/rob/Documents/song-dl/project/config.yaml')
+	yaml_config = yaml.load(stream)
 
-	main(config)
+	main(yaml_config)

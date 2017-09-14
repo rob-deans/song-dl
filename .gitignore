@@ -1,5 +1,6 @@
 project/defaults.cfg
 .downloaded.txt
+project/config.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
