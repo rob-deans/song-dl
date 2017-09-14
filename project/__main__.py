@@ -1,10 +1,8 @@
 from __future__ import unicode_literals
 import youtube_dl
 import sys
-import argparse
 import requests
 import json
-import ConfigParser
 import yaml
 import datetime
 
@@ -14,19 +12,20 @@ yaml_config=[]
 def my_hook(d):
 
 	if d['status'] == 'finished':
-		song_name=d['filename'][16:]
+		song_name=d['filename'][16:-5]
 
 		access_token=yaml_config['pushbullet']['access_token']
 
 		message_title=yaml_config['pushbullet']['message_title']
-		message_body=yaml_config['pushbullet']['message_body'] & song_name
+		message_body=yaml_config['pushbullet']['message_body'] 
+		formatted_message=message_body.format(song=song_name, playlist=current_playlist)
 
 		# Set up the request for the pushbullet notification
 
 		payload={
 			'type': 'note',
 			'title': message_title,
-			'body': message_body,
+			'body': formatted_message,
 		}
 		
 		headers={
@@ -63,7 +62,9 @@ def main(config):
 	
 	} # Pass in arguments for this
         for playlist in playlists:
+            global current_playlist
             current_playlist=playlist['name']
+
 	    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 	        ydl.download([playlist['link']])
 

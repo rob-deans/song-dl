@@ -5,8 +5,11 @@ config:
 pushbullet:
   access_token: #Access token to your pushbullet account - leave blank if you do not want it enabled
   message_title: Downloaded
-  message_body: Download %s #The message that you will see - '%s' denotes where the song name will replace 
+  message_body: Download {song} from {playlist} #The message that you will see - {song} and {playlist} will be replaced with the song and the name of the playlist (see below)
 
 youtube-dl:
   playlist:
-    - link: https://www.youtube.com/playlist?list=PLA0NMfzvlmgOO32w8Dl7esIASM2VYdElH #Full url for the playlist
+    - link: #Full url for the playlist
+      name: My playlist # Give a name to your playlist which will be used for the message
+    - link: #Follow the same format for multiple playlists
+      name:
